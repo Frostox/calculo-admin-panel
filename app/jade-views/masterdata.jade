@@ -1,0 +1,41 @@
+md-content(layout='row')
+  md-button(aria-label='back', style='width: 30px;', ng-click='back()')
+    md-icon(md-svg-icon = '../images/back.svg')
+  md-chips(ng-model='navigation', name='name', readonly='true', md-max-chips='5')
+    md-chip-template
+      strong {{$chip.name}}
+      em &nbsp;({{$chip.selected.name}})
+md-content(ng-show='pageOne')
+  md-content(layout-xs='column', layout-gt-xs='row')
+    div.md-inline-form
+      md-card#card(layout-padding)
+        md-sub-header.md-no-sticky create or edit {{selectedMasterData}}
+        form(name='masterDataForm', layout-gt-xs='column')
+          md-input-container(flex, style='width:100%;')
+            label name
+            input(name = 'name', ng-model='masterData.name', required)
+
+            div.errors(ng-messages="masterDataForm.name.$error", md-auto-hide='false')
+              div(ng-message='required') Please enter a name
+          div(layout='row', layout-align='center center')
+            md-input-container
+              md-button.md-raised.md-primary(ng-click='update()', ng-disabled='!edittingMode || masterDataForm.$invalid') Update
+            md-input-container
+              md-button.md-raised.md-primary(ng-click='add()', ng-disabled='edittingMode || masterDataForm.$invalid || validateFiles()') Add
+            md-input-container
+              md-button.md-raised(ng-click='clear()') Clear
+
+    md-card(layout-padding, flex)
+      md-list(flex)
+        md-list-item.md-2-line(ng-repeat='masterData in masterDataList')
+          md-divider
+          div.md-list-item-text(flex = '3')
+            md-button(style='text-align: left;max-width:70%;min-width:50%;text-transform:none;', ng-click='open(masterData)') {{masterData.name}}
+
+          div.md-secondary(layout='row', flex = '1')
+            md-button.md-icon-button(ng-click='edit(masterData)')
+              md-icon(md-svg-icon='../images/pencil.svg', aria-label='Edit')
+            md-button.md-icon-button(ng-click='remove(masterData)')
+              md-icon(md-svg-icon='../images/bin.svg', aria-label='Edit')
+md-content(ng-show='!pageOne')
+  ng-include(src="'mcqnote.html'")
