@@ -8,74 +8,73 @@
  * Controller of the firebaseApp
  */
 angular.module('firebaseApp')
-  .controller('LoginCtrl', ['$scope', '$window', '$mdToast', function ($scope, $window, $mdToast) {
+  .controller('LoginCtrl', ['$scope', '$window', '$mdToast', 'firebaseurl', function ($scope, $window, $mdToast, firebaseurl) {
+
+    var showMessage = function(message) {
+      $mdToast.show(
+        $mdToast.simple()
+          .textContent(message)
+          .hideDelay(1500)
+      );
+    }
+
+    var verifyAdmin = function(user) {
+      if(user && user.uid){
+        var admin = firebase.database().ref('/admin');
+
+        firebase.database().ref('/admin').once('value').then(function(snapshot) {
+          if(user.uid == snapshot.val()){
+            $window.location.href = 'jade-views/home.html';
+          } else {
+            showMessage("Authentication Failed");
+          }
+        });
+      } else {
+         showMessage("Authentication Failed");
+      }
+    };
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        //go ahead
+        verifyAdmin(user);
+      } else {
+        // No user is signed in.
+        //do nothing
+
+      }
+    });
+
+    var user = firebase.auth().currentUser;
+
+    if (user) {
+      // User is signed in.
+      //go ahead
+      verifyAdmin(user);
+    } else {
+      // No user is signed in.
+      //do nothing
+    }
+
+
 
     $scope.user = {};
 
-    var ref = new Firebase("https://extraclass.firebaseio.com");
-    var refAdminUid = new Firebase("https://extraclass.firebaseio.com/admin");
-    var authData = ref.getAuth();
-    if (authData) {
-      console.log(authData.uid);
 
-      refAdminUid.on("value", function(snapshot) {
-        console.log('snapshot '+ snapshot.val());
-        if(snapshot.val() == authData.uid){
-          $window.location.href = 'jade-views/home.html';
-        }
-        else {
-          $mdToast.show(
-            $mdToast.simple()
-              .textContent('Authentication Failed')
-              .hideDelay(1500)
-          );
-        }
-      }, function (errorObject) {
-        $mdToast.show(
-          $mdToast.simple()
-            .textContent('Authentication Failed')
-            .hideDelay(1500)
-        );
-      });
-    }
     $scope.login = function(){
-      function authHandler(error, authData) {
-        if (error) {
-          console.log("Login Failed!", error);
-          $mdToast.show(
-            $mdToast.simple()
-              .textContent('Authentication Failed')
-              .hideDelay(1500)
-          );
+      firebase.auth().signInWithEmailAndPassword($scope.user.email, $scope.user.password).catch(function(error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+
+        if (errorCode === 'auth/wrong-password') {
+            showMessage("Wrong Password");
         } else {
-          console.log("Authenticated successfully with payload:", authData);
-          refAdminUid.on("value", function(snapshot) {
-            console.log(snapshot.val());
-            if(snapshot.val() == authData.uid){
-              $window.location.href = 'jade-views/home.html';
-            }
-            else {
-              $mdToast.show(
-                $mdToast.simple()
-                  .textContent('Authentication Failed')
-                  .hideDelay(1500)
-              );
-            }
-          }, function (errorObject) {
-            $mdToast.show(
-              $mdToast.simple()
-                .textContent('Authentication Failed')
-                .hideDelay(1500)
-            );
-          });
-
+          showMessage(errorMessage);
         }
-      }
+        console.log(error);
 
-      ref.authWithPassword({
-        email    : $scope.user.email || '',
-        password : $scope.user.password || ''
-      }, authHandler);
+      });
     }
 
   }]);

@@ -8,7 +8,7 @@
  * Controller of the firebaseApp
  */
 angular.module('firebaseApp')
-  .controller('MasterDataCtrl', ['$scope', '$window', '$mdToast', '$firebaseArray', function ($scope, $window, $mdToast, $firebaseArray) {
+  .controller('MasterDataCtrl', ['$scope', '$window', '$mdToast', '$firebaseArray', 'firebaseurl', function ($scope, $window, $mdToast, $firebaseArray, firebaseurl) {
 
     $scope.edittingMode = false;
 
@@ -29,16 +29,23 @@ angular.module('firebaseApp')
       'Topics'
     ];
 
+    var showMessage = function(message) {
+      $mdToast.show(
+        $mdToast.simple()
+          .textContent(message)
+          .hideDelay(1500)
+      );
+    }
+
+    var database = firebase.database();
 
 
-    var uri = 'https://extraclass.firebaseio.com';
-    var ref = new Firebase(uri);
     var refMasterData = {
-      courses: new Firebase(uri + '/courses'),
-      subjects: new Firebase(uri + '/subjects'),
-      topics: new Firebase(uri + '/topics'),
-      mcqs: new Firebase(uri + '/mcqs'),
-      notes: new Firebase(uri + '/notes')
+      courses: database.ref('/courses'),
+      subjects: database.ref('/subjects'),
+      topics: database.ref('/topics'),
+      mcqs: database.ref('/mcqs'),
+      notes: database.ref('/notes')
     }
 
     $scope.refresh = function(){
@@ -83,7 +90,7 @@ angular.module('firebaseApp')
 
     $scope.update = function(){
       var index = $scope.masterData.$id;
-  		var refMasterData = new Firebase(uri + "/" + $scope.selectedMasterData + "/" +index);
+      var refMasterData = database.ref('/' + $scope.selectedMasterData + '/' + index);
   		refMasterData.update({
   			name:$scope.masterData.name
   		});

@@ -40,6 +40,5 @@
   },
   "_source": "https://github.com/firebase/firebase-util.git",
   "_target": "^0.2.5",
-  "_originalSource": "firebase-util",
-  "_direct": true
+  "_originalSource": "firebase-util"
 }

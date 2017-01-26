@@ -8,22 +8,22 @@
  * Controller of the firebaseApp
  */
 angular.module('firebaseApp')
-  .controller('HomeCtrl', ['$scope', '$window', '$mdToast', '$firebaseArray', function ($scope, $window, $mdToast, $firebaseArray) {
+  .controller('HomeCtrl', ['$scope', '$window', '$mdToast', '$firebaseArray', 'firebaseurl', function ($scope, $window, $mdToast, $firebaseArray, firebaseurl) {
 
-
-
-    var ref = new Firebase("https://extraclass.firebaseio.com");
-
-    var authData = ref.getAuth();
-    if (!authData) {
-      $window.location.href = '/';
-    }
-
-
-
+    firebase.auth().onAuthStateChanged(function(user) {
+      console.log(user + ' in state changed');
+      if (!user) {
+        $window.location.href = '/extraclass2';
+      }
+    });
+    
     $scope.logOut = function(){
-      ref.unauth();
-      $window.location.href = '/extraclass/';
+      firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+      }, function(error) {
+        // An error happened.
+      });
+
     };
 
 

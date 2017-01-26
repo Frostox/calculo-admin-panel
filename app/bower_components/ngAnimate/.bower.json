@@ -7,8 +7,7 @@
     "branch": "master",
     "commit": "750f243cf99c60a30ecf5e283d428b4522478aaa"
   },
-  "_source": "git://github.com/Augus/ngAnimate.git",
+  "_source": "https://github.com/Augus/ngAnimate.git",
   "_target": "*",
-  "_originalSource": "ngAnimate",
-  "_direct": true
+  "_originalSource": "ngAnimate"
 }

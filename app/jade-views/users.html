@@ -40,7 +40,10 @@
         </div>
         <div layout="row" flex="1" class="md-secondary">
           <md-input-container>
-            <md-buttom ng-click="seeKey(user)" class="md-raised">See Key</md-buttom>
+            <md-button ng-click="seeKey(user)" class="md-raised">See Key</md-button>
+          </md-input-container>
+          <md-input-container>
+            <md-button ng-click="mailKey(user)" class="md-raised">Mail Key</md-button>
           </md-input-container>
           <md-button ng-click="block(user.$id, !user.blocked)" class="md-icon-button">
             <md-icon md-svg-icon="../images/shapes.svg" aria-label="Edit" ng-class="user.blocked ? blocked : unblocked"></md-icon>

@@ -30,7 +30,9 @@ md-content(layout-xs='column', layout-gt-xs='row')
           h5 {{user.pkey}}
         div.md-secondary(layout='row', flex = '1')
           md-input-container
-            md-buttom.md-raised(ng-click='seeKey(user)') See Key
+            md-button.md-raised(ng-click='seeKey(user)') See Key
+          md-input-container
+            md-button.md-raised(ng-click='mailKey(user)') Mail Key
           md-button.md-icon-button(ng-click='block(user.$id, !user.blocked)')
             md-icon(md-svg-icon='../images/shapes.svg', aria-label='Edit', ng-class='user.blocked ? blocked : unblocked')
           md-button.md-icon-button(ng-click='refreshKey(user)')

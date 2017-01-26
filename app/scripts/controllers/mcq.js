@@ -8,17 +8,28 @@
  * Controller of the firebaseApp
  */
 angular.module('firebaseApp')
-  .controller('MCQCtrl', ['$scope', '$window', '$mdToast', '$firebaseArray', '$rootScope', 'FileUploader', function ($scope, $window, $mdToast, $firebaseArray, $rootScope, FileUploader) {
+  .controller('MCQCtrl', ['$scope', '$window', '$mdToast', '$firebaseArray', '$rootScope', 'FileUploader', 'firebaseurl', function ($scope, $window, $mdToast, $firebaseArray, $rootScope, FileUploader, firebaseurl) {
 
     var currentKey = '';
     var questname, aname, bname, cname, dname;
-    var uri = 'https://extraclass.firebaseio.com';
-    var mcqs = new Firebase(uri + '/mcqs');
+
+    var showMessage = function(message) {
+      $mdToast.show(
+        $mdToast.simple()
+          .textContent(message)
+          .hideDelay(1500)
+      );
+    }
+
+    var database = firebase.database();
+
+
+    var mcqs = database.ref('/mcqs');
 
 
 
     var uploader = $scope.uploader = new FileUploader({
-        url: '/extraclass/upload.php'
+        url: '/extraclass2/upload.php'
     });
 
 
@@ -226,7 +237,7 @@ angular.module('firebaseApp')
     $scope.update = function(){
       var index = $scope.mcq.$id;
       currentKey = index;
-  		var refMcq = new Firebase(uri + "/mcqs/" +index);
+      var refMcq = database.ref('/mcqs/' + index);
 
 
 

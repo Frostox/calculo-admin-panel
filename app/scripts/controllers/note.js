@@ -1,17 +1,18 @@
 'use strict';
 
 angular.module('firebaseApp')
-  .controller('NotesCTRL', ['$scope', '$window', '$mdToast', '$firebaseArray', '$rootScope', 'FileUploader', function ($scope, $window, $mdToast, $firebaseArray, $rootScope, FileUploader) {
+  .controller('NotesCTRL', ['$scope', '$window', '$mdToast', '$firebaseArray', '$rootScope', 'FileUploader', 'firebaseurl', function ($scope, $window, $mdToast, $firebaseArray, $rootScope, FileUploader, firebaseurl) {
 
     var currentKey = '';
-    var uri = 'https://extraclass.firebaseio.com';
-    var ref = new Firebase(uri);
-    var notes = new Firebase(uri + '/notes');
+
+    var database = firebase.database();
+
+    var notes = database.ref('/notes');
 
     $scope.edittingMode = false;
 
     var uploader = $scope.uploader = new FileUploader({
-        url: '/extraclass/note-upload.php'
+        url: '/extraclass2/note-upload.php'
     });
 
 
@@ -63,8 +64,7 @@ angular.module('firebaseApp')
     uploader.onCompleteAll = function() {
         console.info('onCompleteAll');
         uploader.queue = [];
-
-        var updateRef = new Firebase("https://extraclass.firebaseio.com/update");
+        var updateRef = database.ref('/update');
         updateRef.transaction(function(currentUpdate) {
           return currentUpdate+1;
         });
@@ -73,7 +73,7 @@ angular.module('firebaseApp')
 
 
     };
-  
+
 
 
 
@@ -112,7 +112,7 @@ angular.module('firebaseApp')
 
 
       $scope.note.topic = $scope.navigation[2].selected.$id;
-      currentKey = notes.push($scope.note).key();
+      currentKey = notes.push($scope.note).key;
       uploader.uploadAll();
 
       $scope.clear();
@@ -124,7 +124,7 @@ angular.module('firebaseApp')
     $scope.update = function(){
       var index = $scope.note.$id;
       currentKey = index;
-  		var refNote = new Firebase(uri + "/notes/" +index);
+      var refNote = database.ref('/notes/' + index);
 
 
 
